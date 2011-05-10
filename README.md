@@ -4,7 +4,7 @@ Sublime AS3 - Actionscript Sublime Package
 Instalation
 --------
 
-`cd ~/Library/Application Support/Sublime Text 2/Packages/`  
+`cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/`  
 `git clone git://github.com/lucasdupin/SublimeAS3.git`
 
 About
