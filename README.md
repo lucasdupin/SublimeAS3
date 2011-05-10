@@ -1,7 +1,7 @@
 Sublime AS3 - Actionscript Sublime Package
 ===========================
 
-Instalation
+Installation
 --------
 
 `cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/`  
