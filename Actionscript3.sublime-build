@@ -1,0 +1,6 @@
+{
+	"cmd": ["rake"],
+	"working_dir": "${project_path:${folder}}",
+	"file_regex": "(.*?)\\(([0-9]*)\\): col: ([0-9]*) Error: ",
+	"selector": "source.actionscript.3,source.yaml"
+}
