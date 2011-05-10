@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>---
+default:
+    - debug: false
+      open: public/${1:Main}.swf
+      extras: -use-network=false -static-link-runtime-shared-libraries
+    
+library-path:
+    - ${2:source/swc}
+
+source-path:
+    - ${3:source/classes}
+    
+applications:
+    - class: source/classes/$1.as
+      output: public/$1.swf
+      # exclude: source/classes/Other.as
+
+# asdoc:
+#     title: "My ActionScript project"
+#     footer: "My ActionScript project footer"
+#     output: docs/
+#     exclude-dirs: 
+#       - source/classes/caurina/</string>
+	<key>name</key>
+	<string>build.yaml</string>
+	<key>scope</key>
+	<string>source.yaml</string>
+	<key>tabTrigger</key>
+	<string>build</string>
+	<key>uuid</key>
+	<string>4FE200CA-211B-44B1-835F-FF2263562E01</string>
+</dict>
+</plist>
