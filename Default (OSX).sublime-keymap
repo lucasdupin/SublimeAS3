@@ -1,0 +1,14 @@
+[
+	{ "keys": ["super+shift+i"], "command": "actionscript3_import", "context": [
+		{ "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
+	]
+	},
+	{ 
+		"keys": ["super+y"], "command": "show_overlay", "args": {"overlay": "goto", "text": "@"} 
+	},
+	{ 
+		"keys": ["super+r"], "command": "actionscript3_run", "context": [
+			{ "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
+		]
+	}
+]
