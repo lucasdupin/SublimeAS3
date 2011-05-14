@@ -3,6 +3,12 @@
 		{ "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
 	]
 	},
+	{ "keys": ["shift+enter"], "command": "insert_snippet", "args": {"contents": "protected function ${1:name}(${2}):${3:void}\n{\n\t$0\n}"}, "context":
+        [
+                { "key": "setting.auto_indent", "operator": "equal", "operand": true },
+                { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true }
+        ]
+	},
 	{ 
 		"keys": ["super+y"], "command": "show_overlay", "args": {"overlay": "goto", "text": "@"} 
 	},
