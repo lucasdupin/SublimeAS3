@@ -1,26 +1,36 @@
 import os, yaml
 
+class SourceTools(object):
+	"""Project related stuff"""
+	def __init__(self, file_name):
+		self.file_name = file_name
+		self.project_path = self.get_project_path()
+		self.config = self.load_config();
+		
+	def src_dirs(self):
+		pass
 
-def src_dirs():
-	pass
+	def search_all_paths(self):
+		pass
 
-def search_all_paths(self):
-	pass
+	def get_project_path(self):
+		""" 
+		Finds build.yaml related to the file_name received
+		"""
+		path = os.path.dirname(self.file_name)
+		while path != '/' :
+			# Check for build.yaml
+			for f in os.listdir(path):
+				if f.lower() == "build.yaml":
+					return path
+			path = os.path.dirname(path)
+		# Not found
+		raise Exception("Could not find build.yaml")
 
-def project_path(file_name):
-	path = os.path.dirname(file_name)
-	while path != '/' :
-		# Check for build.yaml
-		for f in os.listdir(path):
-			if f.lower() == "build.yaml":
-				return path
-		path = os.path.dirname(path)
-	# Not found
-	raise Exception("Could not find build.yaml")
-
-def config(file_name):
-	yaml_path = os.path.join(project_path(file_name), "build.yaml")
-	return yaml.load(file(yaml_path, 'r'))
+	def load_config(self):
+		""" Loads build.yaml """
+		yaml_path = os.path.join(project_path(self.file_name), "build.yaml")
+		return yaml.load(file(yaml_path, 'r'))
 
 	
 	# def self.common_src_dirs
