@@ -1,4 +1,6 @@
-import sublime, sublime_plugin, source_tools, os
+import sublime, sublime_plugin, os, sys
+sys.path.append('lib')
+import source_tools
 
 class Actionscript3Run(sublime_plugin.TextCommand):
 	"""

@@ -1,6 +1,8 @@
-import sublime, sublime_plugin, source_tools
+import sublime, sublime_plugin, sys
+sys.path.append('lib')
+import source_tools
 
-class AS3Autocomplete(sublime_plugin.EventListener):
+class Actionscript3Complete(sublime_plugin.EventListener):
 	"""Autocomplete for AS3"""
 	
 	def on_query_completions(self, view, prefix, locations):
