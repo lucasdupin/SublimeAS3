@@ -3,6 +3,10 @@
 		{ "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
 	]
 	},
+	{ "keys": ["super+d"], "command": "actionscript3_debug", "context": [
+		{ "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
+	]
+	},
 	{ "keys": ["shift+enter"], "command": "insert_snippet", "args": {"contents": "protected function ${1:name}(${2}):${3:void}\n{\n\t$0\n}"}, "context":
         [
                 { "key": "setting.auto_indent", "operator": "equal", "operand": true },

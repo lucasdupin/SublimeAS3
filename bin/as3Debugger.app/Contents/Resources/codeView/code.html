@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>SyntaxHighlighter Build Test Page</title>
+	<script type="text/javascript" src="scripts/shCore.js"></script>
+	<script type="text/javascript" src="scripts/shBrushJava.js"></script>
+	<script type="text/javascript" src="scripts/shBrushXml.js"></script>
+	<link type="text/css" rel="stylesheet" href="styles/shCore.css"/>
+	<link type="text/css" rel="stylesheet" href="styles/shThemeAS3.css"/>
+	<script type="text/javascript">
+		//SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
+		SyntaxHighlighter.defaults['toolbar'] = false;
+		
+		function changeCode(theCode, lines){
+			lines = eval(lines);
+			document.getElementById("code").innerHTML = "<pre class=\"brush: java;\" name=\"code\">" + escapeHTML(theCode) + "</pre>";
+			SyntaxHighlighter.defaults["highlight"] = lines;
+			SyntaxHighlighter.highlight();
+			
+			console.log(theCode, lines)
+		}
+		
+		function escapeHTML (str)
+		{
+		   var div = document.createElement('div');
+		   var text = document.createTextNode(str);
+		   div.appendChild(text);
+		   return div.innerHTML;
+		};
+	</script>
+	
+	<style type="text/css" media="screen">
+		body{
+			margin:2px;
+			padding:0;
+		}
+	</style>
+</head>
+<body>
+	<div id="code">
+		
+	</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Classes</key>
+	<dict>
+		<key>NSApplication</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>connected</key>
+				<dict>
+					<key>Name</key>
+					<string>connected</string>
+				</dict>
+				<key>flashlogPath</key>
+				<dict>
+					<key>Name</key>
+					<string>flashlog path</string>
+				</dict>
+				<key>flashlogText</key>
+				<dict>
+					<key>Name</key>
+					<string>flashlog text</string>
+				</dict>
+				<key>flexPath</key>
+				<dict>
+					<key>Name</key>
+					<string>flex path</string>
+				</dict>
+				<key>projectPath</key>
+				<dict>
+					<key>Name</key>
+					<string>project path</string>
+				</dict>
+			</dict>
+			<key>Name</key>
+			<string>application</string>
+			<key>PluralName</key>
+			<string>applications</string>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>Commands and classes for as3Debugger Scripting</string>
+	<key>Name</key>
+	<string>as3BundleHelper Scripting</string>
+</dict>
+</plist>
