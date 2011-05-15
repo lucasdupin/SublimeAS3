@@ -1,4 +1,4 @@
-import os, yaml, build_validator, swc_dump
+import os, yaml, build_validator, swc_dump, re
 
 class SourceTools(object):
 	"""Project related stuff"""
@@ -12,9 +12,7 @@ class SourceTools(object):
 	def find_package(self, word):
 		""" find import for class """
 		# Check if there was no input
-		if word == '':
-			return []
-		
+		if word == '': return []
 		# Search
 		return self.search_all_paths(word)
 
@@ -43,7 +41,7 @@ class SourceTools(object):
 		bp = self.search_bundle_paths(word)
 		# Create result array with the correct order
 		ordered_paths = pp['exact'] + bp['exact'] + pp['partial'] + bp['partial']
-		# removing duplicates (fast)
+		# removing duplicates (fast way)
 		seen = {} 
 		result = []
 		for item in ordered_paths: 
@@ -55,10 +53,50 @@ class SourceTools(object):
 
 	def search_project_paths(self, word):
 		swcs = swc_dump.SWCDump(self.project_path, self.config['library-path']);
-		for path in self.config['source-path'] + swcs.dump_paths:
-			pass
-		return {'partial':[], 'exact':[]}
-	def search_bundle_paths(self, word):
-		return {'partial':[], 'exact':[]}
+		source_paths = [os.path.join(self.project_path, p) for p in self.config['source-path']]
+		# Regexes
+		partial_re = re.compile('\\b%s\w*\.(as|mxml)$' % word, re.IGNORECASE)
+		exact_re = re.compile('\\b%s$' % word, re.IGNORECASE)
+		extension_re = re.compile('\\.(as|mxml)$')
+		# Return values
+		partial_matches = []; exact_matches = []
+		# Search in all paths
+		found_paths = []
+		for path in source_paths + swcs.dump_paths:
+			# all files
+			for w in os.walk(path, followlinks=True):
+				# check for matches
+				for f in w[2]:
+					if not partial_re.match(f): continue
+					# Found something! Check if it's exact or partial...
+					package_name = re.sub(extension_re, '', os.path.join(w[0], f).replace(path+'/', '').replace('/','.'))
+					if exact_re.match(f):
+						exact_matches.append(package_name)
+					else:
+						partial_matches.append(package_name)
+		return {'partial':partial_matches, 'exact':exact_matches}
 
-		
+	def search_bundle_paths(self, word):
+		# Return values
+		partial_matches = []; exact_matches = []
+		partial_re = re.compile("href='([a-zA-Z0-9\\/]*\\b%s\\w*)\\.html'|([a-zA-Z0-9\\/]*\\/package\\.html#%s\\w*)\\(\\)'" % (word, word), re.IGNORECASE)
+		exact_re = re.compile('(^|\\.)%s$' % word, re.IGNORECASE)
+
+		# Open document with definitions
+		doc = open(os.path.join(os.path.dirname(__file__), '..', 'data', 'doc_dictionary.xml'))
+		# Check for each one
+		for line in doc:
+			p = partial_re.search(line)
+			if p:
+				package_name = p.group(1) if p.group(2) is None else p.group(2)
+				package_name = package_name.replace('/','.')
+				if exact_re.search(package_name):
+					exact_matches.append(package_name)
+				else:
+					partial_matches.append(package_name)
+		return {'partial':partial_matches, 'exact':exact_matches}
+
+# Testing
+if __name__ == "__main__":
+	s = SourceTools("/Users/lucas/src/unimedii/frontend/trunk/source/classes/unimedii_loader.as")
+	print s.find_package("Load")
