@@ -1,11 +1,13 @@
-import os, yaml, build_validator, swc_dump, re
+import os, yaml, build_validator, swc_dump, re, sys
+from os.path import *
 
 class SourceTools(object):
 	"""Project related stuff"""
-	def __init__(self, file_name):
+	def __init__(self, file_name, st_lib_path=None):
 		self.file_name = file_name
 		self.project_path = self.get_project_path()
 		self.config = self.load_config()
+		self.st_lib_path = st_lib_path # Don't know why but sublime makes my script lose it's path
 		# Making sure our build file is valid
 		# build_validator.validate(config)
 		
@@ -20,19 +22,19 @@ class SourceTools(object):
 		""" 
 		Finds build.yaml related to the file_name received
 		"""
-		path = os.path.dirname(self.file_name)
+		path = dirname(self.file_name)
 		while path != '/' :
 			# Check for build.yaml
 			for f in os.listdir(path):
 				if f.lower() == "build.yaml":
 					return path
-			path = os.path.dirname(path)
+			path = dirname(path)
 		# Not found
 		raise Exception("Could not find build.yaml")
 
 	def load_config(self):
 		""" Loads build.yaml """
-		yaml_path = os.path.join(self.project_path, "build.yaml")
+		yaml_path = join(self.project_path, "build.yaml")
 		return yaml.load(file(yaml_path, 'r'))
 
 	def search_all_paths(self, word):
@@ -53,7 +55,7 @@ class SourceTools(object):
 
 	def search_project_paths(self, word):
 		swcs = swc_dump.SWCDump(self.project_path, self.config['library-path']);
-		source_paths = [os.path.join(self.project_path, p) for p in self.config['source-path']]
+		source_paths = [join(self.project_path, p) for p in self.config['source-path']]
 		# Regexes
 		partial_re = re.compile('\\b%s\w*\.(as|mxml)$' % word, re.IGNORECASE)
 		exact_re = re.compile('\\b%s$' % word, re.IGNORECASE)
@@ -69,7 +71,7 @@ class SourceTools(object):
 				for f in w[2]:
 					if not partial_re.match(f): continue
 					# Found something! Check if it's exact or partial...
-					package_name = re.sub(extension_re, '', os.path.join(w[0], f).replace(path+'/', '').replace('/','.'))
+					package_name = re.sub(extension_re, '', join(w[0], f).replace(path+'/', '').replace('/','.'))
 					if exact_re.match(f):
 						exact_matches.append(package_name)
 					else:
@@ -83,7 +85,7 @@ class SourceTools(object):
 		exact_re = re.compile('(^|\\.)%s$' % word, re.IGNORECASE)
 
 		# Open document with definitions
-		doc = open(os.path.join(os.path.dirname(__file__), '..', 'data', 'doc_dictionary.xml'))
+		doc = open(join(self.st_lib_path, dirname(__file__), '..', 'data', 'doc_dictionary.xml'))
 		# Check for each one
 		for line in doc:
 			p = partial_re.search(line)

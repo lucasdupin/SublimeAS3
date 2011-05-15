@@ -5,7 +5,7 @@ import source_tools
 class Actionscript3Import(sublime_plugin.TextCommand):
 	def run(self, edit):
 		# Project reference
-		st = source_tools.SourceTools(self.view.file_name())
+		st = source_tools.SourceTools(self.view.file_name(), os.path.join(sublime.packages_path(), 'ActionScript3'))
 
 		# Get the word we'll search for
 		current_word_region = self.view.word(self.view.sel()[0])
@@ -17,10 +17,11 @@ class Actionscript3Import(sublime_plugin.TextCommand):
 			sublime.status_message("No package found");
 		elif len(matches) == 1:
 			# Found only one, let's insert it
-			pass
+			imp = matches[0]
 		else:
 			# Lots of choices
-			pass
-
-		# insert the instruction
-		self.view.insert(edit, 0, ','.join(matches))
+			imp = matches[0] # TODO
+		# Class name
+		cla = imp.split('.').pop()
+		# Replace Class name
+		self.view.replace(edit, current_word_region, cla)
