@@ -1,0 +1,288 @@
+#Requires
+%w(rubygems rake fileutils yaml logger socket).each { |lib| require lib}
+
+SOCKET_FILE = "/tmp/fcshd.sock"
+
+# Setup tmp path
+TMP_PATH = "/tmp/fcshd/"
+FileUtils.mkdir_p TMP_PATH unless File.directory? TMP_PATH
+# Helper function
+def logger
+	@logger ||= Logger.new "/tmp/fcshd.log"
+end
+
+#Default task
+task :default => [ :build ]
+
+desc "Build"
+task :build do
+
+  # Start server if it's not up
+  # puts `cd #{File.dirname(__FILE__).gsub(' ', '\ ')} && PATH=#{ENV['PATH']} /usr/bin/rake start` unless FCSHDServer.isOn?
+  Rake::Task[:start].invoke unless FCSHDServer.isOn?
+  
+  # Send commands to the server
+  config["applications"].each do |v|
+    
+    # Open socket
+    sock = UNIXSocket.new SOCKET_FILE
+    
+    puts "Compiling: #{v['class']}"
+    sock.send "build:" + get_compile_line(v["class"], v["output"], v["exclude"]) + "\n", 0
+    while line = sock.recvfrom(128000)[0]
+      STDOUT.write line
+      break if line =~ /\0$/ || line.nil?
+    end
+    
+    sock.close
+  end
+
+end
+
+desc "Opens default file"
+task :open do
+	
+  # get the current 'open' value relative to the Rakefile path
+  open = File.join(current_path, config['default'][0]['open'])
+  # Checking if there is a  filesystem entry... otherwise, try to open itself
+  open = config['default'][0]['open'] unless File.file? open
+  # Log
+  logger.info("Client") {"Opening target: #{open}"}
+  # Open it
+  system "open '#{open}'"
+
+end
+
+desc "Documentation generator"
+task :doc do
+	
+  doc = config["asdoc"][0]
+  sources = (config["source-path"] || []).map{|v| "-doc-sources+=" + escape(v)}.join(" ")
+  lib_path = (config["library-path"] || []).map{|v| "-library-path+=" + escape(v)}.join(" ")
+  exclude = (doc["exclude-dirs"] || []).map {|i| Dir[File.join(i, "**", "*.as")].map{|d| "-exclude-classes+=" + d.sub(i, '').gsub(/^\/?/, '').gsub(/\//, '.').gsub(/\.as$/, '')}.join(' ')}.join(' ')
+  packages = (doc["packages"] || []).map {|v| v.map {|key,value| "-package " + escape(key) + " " + escape(value)}}.join(" ")
+  extras = doc["extras"] rescue ""
+  
+  command = "asdoc -footer #{escape doc['footer']} -main-title #{escape doc['title']} -window-title #{escape doc['title']} -output #{escape doc['output']} #{lib_path} #{sources} #{exclude} #{packages} #{extras}"
+  
+  logger.info("Client") {"Generating asdocs: #{command}"}
+  system command
+  
+end
+
+desc "Start server as a daemon"
+task :start do
+  pid = fork do
+    Signal.trap('HUP', 'IGNORE') # Don't die upon logout
+    FCSHDServer.new.start 
+  end
+  Process.detach(pid)
+  
+  done = false
+  5.times do
+    puts "Starting server... #{FCSHDServer.isOn?? 'up' : 'down'}"
+    if FCSHDServer.isOn?
+      done = true
+      break
+    end
+    sleep 3
+  end
+  puts "Failed to start server" unless done
+end
+
+desc "Stop server"
+task :stop do
+  # Try to close the socket
+  if File.exists? SOCKET_FILE
+    UNIXSocket.new(SOCKET_FILE).puts "stop"
+  end rescue nil
+  
+  # Ensure the socket file was removed properly
+  File.delete SOCKET_FILE if File.exists? SOCKET_FILE
+  
+end
+
+desc "Removes all built files"
+task :clean do
+	
+  what = config["applications"].map do |v|
+      puts "cleaning #{v['output']}"
+      logger.info("Client") {"cleaning #{v['output']}"}
+      FileUtils.rm_rf v['output']
+  end
+ 
+end
+
+desc "Check if server is down"
+task :status do
+  if FCSHDServer.isOn?
+    puts "up"
+  else
+    puts "down"
+  end
+end
+
+private
+
+def get_compile_line(input, output, exclude)
+
+    # Get libs path (SWC)
+    libs_path    = (config["library-path"] || []).map{ |lib| "-library-path+=#{escape(File.join(current_path, lib))}"}.join(" ")
+    # Get sources path (.as)
+    sources_path = (config["source-path"] || []).map{ |lib| "-sp+=#{escape(File.join(current_path, lib))}"}.join(" ")
+    #Params
+    extras = (config['default'][0]['extras'] rescue "")
+    debug = (config['default'][0]['debug'] rescue "")
+    # Generate compilation line
+    line = "mxmlc #{escape(File.join(current_path, input))} -o=#{escape(File.join(current_path, output))} -debug=#{debug} #{libs_path} #{sources_path} #{extras}"
+
+    # Checking for link report
+    if require_report input
+      #Making sure the link report folder exists
+      link_report_file = File.join("/tmp/fcshd/reports/", input)
+      FileUtils.mkdir_p File.dirname(link_report_file)
+      # Appending the link report stuff
+      line += " -link-report=#{escape(link_report_file)}"
+    end
+    
+    #Excluding some classes
+    exclude.each do |l|
+        line += " -load-externs=/tmp/fcshd/reports/#{l}"
+    end unless exclude.nil?
+
+    line
+end
+
+# Checks if input needs to generate a report file
+def require_report(input)
+  config["applications"].each do |app|
+      app["exclude"].each do |exclude|
+        return true if exclude == input
+      end unless app["exclude"].nil?
+  end
+  
+  false
+end
+
+def current_path
+  ENV['PROJECT_PATH'] || Dir.pwd
+end
+
+def escape path
+    path.gsub ' ', '\ '
+end
+
+def config
+	# Loading build file
+	@config ||= YAML.load_file(current_path + "/build.yaml")
+end
+
+# 
+# Verifications
+# 
+
+# Making sure the config file exists
+unless File.exists?(current_path + "/build.yaml")
+  puts "Could not find buil.yaml at #{current_path + "/build.yaml"}"
+  return
+end
+# Making sure the Flex SDK is in the path
+paths = ['~/.profile', '~/.bash_profile', "~/.bashrc"].map do |p|
+  "source #{p}; " if File.exists? File.expand_path(p)
+end
+ENV['PATH'] = `#{paths.join} echo $PATH`
+if `/usr/bin/which fcsh`.empty?
+  puts "Could not find 'fcsh', is it in your PATH?"
+  return
+end
+
+# ####################################################################
+
+
+class FCSHDServer
+  ASSIGNED_REGEXP = /^ fcsh: Assigned (\d+) as the compile target id/
+  ERROR_REGEXP = /Error: unable to open/
+  TARGET_NOT_FOUND_REGEX = /Target (\d+) not found/
+
+  def initialize
+    # Look after fcsh
+    if `which fcsh`.empty?
+      logger.error("Server") {"fcsh not found on given path: #{ENV['PATH']}"}
+      exit 1
+    end
+    # When closing...
+		trap("EXIT"){
+        @socket.close
+        @fcsh.close
+        File.delete SOCKET_FILE if File.exists? SOCKET_FILE
+    }
+    #remembering wich swfs we asked for compiling
+		@commands = Hash.new
+		
+  end
+
+  def start
+    # Start the socket
+    logger.info("Server"){ "Creating socket"}
+    begin
+      @socket = UNIXServer.new SOCKET_FILE
+    rescue Exception => e
+      "Failed to create socket, port:#{PORT} already in user?"
+      exit
+    end
+    
+    # Open it
+    logger.info("Server"){ "Opening fcsh"}
+		@fcsh = IO.popen("fcsh  2>&1", "w+")
+    # Read what it has to say
+    read_to_prompt(@fcsh)
+	  
+		#Read socket
+		logger.info("Server"){ "Listening"}
+    while s = @socket.accept
+      logger.info("Server"){ "Connected. waiting..."}
+      line = s.gets
+      logger.info('Server'){"received: #{line}"}
+      if line =~ /build:(.+)/
+        regex_result = $1
+        # Ask to build
+        @fcsh.puts @commands.has_key?(regex_result) ? "compile #{@commands[regex_result]}" : regex_result
+        # Read result
+        output = read_to_prompt(@fcsh, s)
+        # Close connection
+        s.write("\0")
+        s.close
+        # Check for lost targets
+        @commands.delete(regex_result) if output =~ TARGET_NOT_FOUND_REGEX
+        # Check for new assignment
+        @commands[regex_result] = $1 if !(output =~ ERROR_REGEXP) && output =~ ASSIGNED_REGEXP
+        logger.info('Server'){output}
+        logger.info('Server'){"done compiling"}
+      elsif line =~ /stop/
+        exit 0
+      end
+
+    end
+  end
+
+  def self.isOn?
+    File.exists? SOCKET_FILE
+  end
+
+  private
+  #Helper method to read the output
+  def read_to_prompt(f, socket=nil)
+      f.flush
+      output = ""
+      while chunk = f.read(1)
+          STDOUT.write chunk
+          output << chunk
+          socket.write(chunk) rescue nil
+          if output =~ /^\(fcsh\)/
+              break
+          end
+      end
+      STDOUT.write ">"
+      output
+  end
+end
