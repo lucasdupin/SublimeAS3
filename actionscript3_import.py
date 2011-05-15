@@ -1,4 +1,4 @@
-import sublime, sublime_plugin, os, sys
+import sublime, sublime_plugin, os, sys, re
 sys.path.append('lib')
 import source_tools
 
@@ -25,3 +25,21 @@ class Actionscript3Import(sublime_plugin.TextCommand):
 		cla = imp.split('.').pop()
 		# Replace Class name
 		self.view.replace(edit, current_word_region, cla)
+
+		# Exit if already imported
+		if self.view.find("^\\s*import\\s+%s(\\s|;)" % imp.replace('.', '\\.'), 0):
+			return
+		# Searching where to add
+		pkg = self.view.find("^\\s*package\\b\\s*([\\w+\\.]*)", 0)
+		cls = self.view.find("^\\s*(public|final)\\s+(final|public)?\\s*\\b(class|interface|function)\\b", 0)
+		mta = self.view.find_all("^\\s*\\[(Style|Bindable|Event|Embed|SWF)")
+		# Calculate
+		# insert_before = (mta+[cls])[0] # Before class or meta
+		insert_after = sublime.Region(0, 0) if pkg is None else pkg # after the package, if it exists
+
+		l = self.view.line(insert_after)
+		self.view.replace(edit, l, "%s\n\timport %s;" % (self.view.substr(l), imp));
+		print insert_before
+		print insert_after
+
+
