@@ -27,7 +27,7 @@ class Actionscript3Import(sublime_plugin.TextCommand):
 		self.view.replace(edit, current_word_region, cla)
 
 		# Exit if already imported
-		if not self.view.find("^\\s*import\\s+%s(\\s|;)" % imp.replace('.', '\\.'), 0):
+		if self.view.find("^\\s*import\\s+%s(\\s|;)" % imp.replace('.', '\\.'), 0):
 			return
 		# Searching where to add
 		pkg = self.view.find("^\\s*package\\b\\s*([\\w+\\.]*)", 0)
