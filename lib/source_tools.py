@@ -91,7 +91,7 @@ class SourceTools(object):
 			p = partial_re.search(line)
 			if p:
 				package_name = p.group(1) if p.group(2) is None else p.group(2)
-				package_name = package_name.replace('/','.')
+				package_name = package_name.replace('/','.').replace("package.html#",'')
 				if exact_re.search(package_name):
 					exact_matches.append(package_name)
 				else:
