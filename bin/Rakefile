@@ -193,6 +193,7 @@ end
 ENV['PATH'] = `#{paths.join} echo $PATH`
 if `/usr/bin/which fcsh`.empty?
   puts "Could not find 'fcsh', is it in your PATH?"
+  puts "Your path is: #{ENV['PATH']}"
   return
 end
 
