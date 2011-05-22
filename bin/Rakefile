@@ -190,7 +190,7 @@ end
 paths = ['~/.profile', '~/.bash_profile', "~/.bashrc"].map do |p|
   "source #{p}; " if File.exists? File.expand_path(p)
 end
-ENV['PATH'] = `#{paths.join} echo $PATH`
+ENV['PATH'] = `#{paths.join} 2&>1; echo $PATH`
 if `/usr/bin/which fcsh`.empty?
   puts "Could not find 'fcsh', is it in your PATH?"
   puts "Your path is: #{ENV['PATH']}"
