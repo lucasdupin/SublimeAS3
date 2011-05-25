@@ -4,6 +4,9 @@
 <dict>
 	<key>content</key>
 	<string>---
+sdk-path:
+    - /libs/sdks/4_1_0
+    # use the root path of your sdk
 default:
     - debug: false
       open: public/${1:Main}.swf

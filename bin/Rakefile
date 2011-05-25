@@ -190,9 +190,14 @@ end
 paths = ['~/.profile', '~/.bash_profile', "~/.bashrc"].map do |p|
   "source #{p}; " if File.exists? File.expand_path(p)
 end
+
 ENV['PATH'] = `#{paths.join} echo $PATH`
-if `/usr/bin/which fcsh`.empty?
+
+fcshpath = config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"
+
+if `/usr/bin/which #{fcshpath}`.empty?
   puts "Could not find 'fcsh', is it in your PATH?"
+  puts "Your path is: #{ENV['PATH']}"
   return
 end
 
@@ -206,7 +211,8 @@ class FCSHDServer
 
   def initialize
     # Look after fcsh
-    if `which fcsh`.empty?
+    fcshpath = config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"
+    if `which #{fcshpath}`.empty?
       logger.error("Server") {"fcsh not found on given path: #{ENV['PATH']}"}
       exit 1
     end
@@ -232,8 +238,9 @@ class FCSHDServer
     end
     
     # Open it
+
     logger.info("Server"){ "Opening fcsh"}
-		@fcsh = IO.popen("fcsh  2>&1", "w+")
+		@fcsh = IO.popen(config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"+"  2>&1", "w+")
     # Read what it has to say
     read_to_prompt(@fcsh)
 	  
