@@ -8,7 +8,7 @@ TMP_PATH = "/tmp/fcshd/"
 FileUtils.mkdir_p TMP_PATH unless File.directory? TMP_PATH
 # Helper function
 def logger
-	@logger ||= Logger.new "/tmp/fcshd.log"
+  @logger ||= Logger.new "/tmp/fcshd.log"
 end
 
 #Default task
@@ -41,7 +41,7 @@ end
 
 desc "Opens default file"
 task :open do
-	
+  
   # get the current 'open' value relative to the Rakefile path
   open = File.join(current_path, config['default'][0]['open'])
   # Checking if there is a  filesystem entry... otherwise, try to open itself
@@ -55,7 +55,7 @@ end
 
 desc "Documentation generator"
 task :doc do
-	
+  
   doc = config["asdoc"][0]
   sources = (config["source-path"] || []).map{|v| "-doc-sources+=" + escape(v)}.join(" ")
   lib_path = (config["library-path"] || []).map{|v| "-library-path+=" + escape(v)}.join(" ")
@@ -104,7 +104,7 @@ end
 
 desc "Removes all built files"
 task :clean do
-	
+  
   what = config["applications"].map do |v|
       puts "cleaning #{v['output']}"
       logger.info("Client") {"cleaning #{v['output']}"}
@@ -173,8 +173,8 @@ def escape path
 end
 
 def config
-	# Loading build file
-	@config ||= YAML.load_file(current_path + "/build.yaml")
+  # Loading build file
+  @config ||= YAML.load_file(current_path + "/build.yaml")
 end
 
 # 
@@ -188,9 +188,8 @@ unless File.exists?(current_path + "/build.yaml")
 end
 # Making sure the Flex SDK is in the path
 paths = ['~/.profile', '~/.bash_profile', "~/.bashrc"].map do |p|
-  "source #{p}; " if File.exists? File.expand_path(p)
+  "source #{p} 2&>1; " if File.exists? File.expand_path(p)
 end
-
 ENV['PATH'] = `#{paths.join} echo $PATH`
 
 fcshpath = config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"
@@ -200,7 +199,6 @@ if `/usr/bin/which #{fcshpath}`.empty?
   puts "Your path is: #{ENV['PATH']}"
   return
 end
-
 # ####################################################################
 
 
@@ -217,14 +215,14 @@ class FCSHDServer
       exit 1
     end
     # When closing...
-		trap("EXIT"){
+    trap("EXIT"){
         @socket.close
         @fcsh.close
         File.delete SOCKET_FILE if File.exists? SOCKET_FILE
     }
     #remembering wich swfs we asked for compiling
-		@commands = Hash.new
-		
+    @commands = Hash.new
+    
   end
 
   def start
@@ -238,14 +236,13 @@ class FCSHDServer
     end
     
     # Open it
-
     logger.info("Server"){ "Opening fcsh"}
-		@fcsh = IO.popen(config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"+"  2>&1", "w+")
+    @fcsh = IO.popen(config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"+"  2>&1", "w+")
     # Read what it has to say
     read_to_prompt(@fcsh)
-	  
-		#Read socket
-		logger.info("Server"){ "Listening"}
+    
+    #Read socket
+    logger.info("Server"){ "Listening"}
     while s = @socket.accept
       logger.info("Server"){ "Connected. waiting..."}
       line = s.gets
