@@ -37,7 +37,6 @@ class Actionscript3Import(sublime_plugin.TextCommand):
 		# insert_before = (mta+[cls])[0] # Before class or meta
 		insert_after = sublime.Region(0, 0) if pkg is None else pkg # after the package, if it exists
 
-		print "pkg: %s" % pkg
 		l = self.view.line(insert_after.end())
 		self.view.replace(edit, l, "%s\n\timport %s;" % (self.view.substr(l), imp));
 
