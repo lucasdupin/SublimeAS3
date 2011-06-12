@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>package ${1}
+{
+	import flash.display.*;
+	import flash.events.*;
+	import flash.net.*;
+
+	public class ${2:MyClass} extends ${3:Sprite}
+	{
+    	public function $2()
+		{
+		  $0
+		}
+	}
+
+}</string>
+	<key>name</key>
+	<string>package</string>
+	<key>scope</key>
+	<string>source.actionscript.3</string>
+	<key>tabTrigger</key>
+	<string>package</string>
+	<key>uuid</key>
+	<string>90CBE8A4-D399-4D7E-B25E-C353785E7A47</string>
+</dict>
+</plist>
