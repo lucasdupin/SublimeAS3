@@ -21,3 +21,11 @@ About
 This is a port from the AS3 TextMate bundle.  
 Work in progress and still very alpha.  
 Use at your own risk!
+
+
+TODO
+-----
+Contextual autocomplete
+Sort imports by name
+Script para criar projeto
+Dump SWCs in a regular interval
