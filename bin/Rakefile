@@ -184,17 +184,12 @@ end
 # Making sure the config file exists
 unless File.exists?(current_path + "/build.yaml")
   puts "Could not find buil.yaml at #{current_path + "/build.yaml"}"
-  return
+  exit 1
 end
-# Making sure the Flex SDK is in the path
-paths = ['~/.profile', '~/.bash_profile', "~/.bashrc"].map do |p|
-  "source #{p} 2&>1; " if File.exists? File.expand_path(p)
-end
-ENV['PATH'] = `#{paths.join} echo $PATH`
 if `/usr/bin/which fcsh`.empty?
   puts "Could not find 'fcsh', is it in your PATH?"
   puts "Your path is: #{ENV['PATH']}"
-  return
+  exit 1
 end
 
 # ####################################################################
