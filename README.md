@@ -10,6 +10,9 @@ Installation
 You'll need to remove the old AS Package, to do so, execute:  
 `rm -rf ActionScript`
 
+Make sure the Flex SDK is available in your PATH
+(by adding it to your .profile or .bash_profile)
+
 Updating
 --------
 `cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/`  
