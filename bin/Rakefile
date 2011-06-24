@@ -185,18 +185,26 @@ end
 # Making sure the config file exists
 unless File.exists?(current_path + "/build.yaml")
   puts "Could not find buil.yaml at #{current_path + "/build.yaml"}"
+  exit
 end
 
-if !config['sdk-path'].empty?
-  @fcshdpath = config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"
+def fcshpath
+  if !config['sdk-path'].empty?
+    @fcshdpath = config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"
+  end
 end
 
-
-if 'which fcsh'.empty?
-  if 'which #{fcshdpath}'.empty?
-    puts "Could not find 'fcsh', is it in your PATH?"
+if 'which #{@fcshdpath}'.empty?
+    puts "Could not find 'fcsh', is it in your build.yaml?"
+    puts "Your sdk-path is: #{@fcshdpath}"
+    exit
+else
+  if 'which fcsh'.empty?
+    puts "Could not find 'fcsh', is it in your PATH or in your build.yaml?"
     puts "Your path is: #{ENV['PATH']}"
     exit
+  else 
+    @fcshpath = 'fsch'
   end
 end
 
@@ -209,21 +217,7 @@ class FCSHDServer
   
 
   def initialize
-    # Look after fcsh
-    puts "INIT"
-    if !config['sdk-path'].empty?
-      @fcshdpath = config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"
-    end
-
-    if '/usr/bin/which fcsh'.empty?
-        logger.error("Server") {"fcsh not found on given path: #{ENV['PATH']}"}
-    end
-
-    if !'/usr/bin/which #{@fcshdpath}'.empty? 
-      puts "FOUND FCSHD"
-      @fromconfig = true
-    end
-    # When closing...
+     # When closing...
 		trap("EXIT"){
         @socket.close
         @fcsh.close
@@ -245,15 +239,9 @@ class FCSHDServer
     
     # Open it
     logger.info("Server"){ "Opening fcsh"}
-
-    puts "From config: "+String(@fromconfig)
-
-    if @fromconfig
-      @fcsh = IO.popen(@fcshdpath+"  2>&1", "w+")
-    else
-		  @fcsh = IO.popen("fcsh  2>&1", "w+")
-    end
-
+    
+    @fcsh = IO.popen(@fcshdpath+"  2>&1", "w+")
+    
     # Read what it has to say
     read_to_prompt(@fcsh)
 	  
