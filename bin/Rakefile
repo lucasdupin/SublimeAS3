@@ -1,7 +1,7 @@
 #Requires
 %w(rubygems rake fileutils yaml logger socket).each { |lib| require lib}
 
-SOCKET_FILE = "/tmp/fcshd.sock"
+SOCKET_FILE = "/tmp/fcshd60.sock"
 
 # Setup tmp path
 TMP_PATH = "/tmp/fcshd/"
@@ -10,6 +10,7 @@ FileUtils.mkdir_p TMP_PATH unless File.directory? TMP_PATH
 def logger
 	@logger ||= Logger.new "/tmp/fcshd.log"
 end
+
 
 #Default task
 task :default => [ :build ]
@@ -184,27 +185,43 @@ end
 # Making sure the config file exists
 unless File.exists?(current_path + "/build.yaml")
   puts "Could not find buil.yaml at #{current_path + "/build.yaml"}"
-  exit 1
 end
-if `/usr/bin/which fcsh`.empty?
-  puts "Could not find 'fcsh', is it in your PATH?"
-  puts "Your path is: #{ENV['PATH']}"
-  exit 1
+
+if !config['sdk-path'].empty?
+  @fcshdpath = config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"
+end
+
+
+if 'which fcsh'.empty?
+  if 'which #{fcshdpath}'.empty?
+    puts "Could not find 'fcsh', is it in your PATH?"
+    puts "Your path is: #{ENV['PATH']}"
+    exit
+  end
 end
 
 # ####################################################################
-
 
 class FCSHDServer
   ASSIGNED_REGEXP = /^ fcsh: Assigned (\d+) as the compile target id/
   ERROR_REGEXP = /Error: unable to open/
   TARGET_NOT_FOUND_REGEX = /Target (\d+) not found/
+  
 
   def initialize
     # Look after fcsh
-    if `which fcsh`.empty?
-      logger.error("Server") {"fcsh not found on given path: #{ENV['PATH']}"}
-      exit 1
+    puts "INIT"
+    if !config['sdk-path'].empty?
+      @fcshdpath = config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"
+    end
+
+    if '/usr/bin/which fcsh'.empty?
+        logger.error("Server") {"fcsh not found on given path: #{ENV['PATH']}"}
+    end
+
+    if !'/usr/bin/which #{@fcshdpath}'.empty? 
+      puts "FOUND FCSHD"
+      @fromconfig = true
     end
     # When closing...
 		trap("EXIT"){
@@ -214,22 +231,29 @@ class FCSHDServer
     }
     #remembering wich swfs we asked for compiling
 		@commands = Hash.new
-		
   end
 
   def start
     # Start the socket
     logger.info("Server"){ "Creating socket"}
+
     begin
       @socket = UNIXServer.new SOCKET_FILE
     rescue Exception => e
       "Failed to create socket, port:#{PORT} already in user?"
-      exit
     end
     
     # Open it
     logger.info("Server"){ "Opening fcsh"}
-		@fcsh = IO.popen("fcsh  2>&1", "w+")
+
+    puts "From config: "+String(@fromconfig)
+
+    if @fromconfig
+      @fcsh = IO.popen(@fcshdpath+"  2>&1", "w+")
+    else
+		  @fcsh = IO.popen("fcsh  2>&1", "w+")
+    end
+
     # Read what it has to say
     read_to_prompt(@fcsh)
 	  
@@ -255,7 +279,7 @@ class FCSHDServer
         logger.info('Server'){output}
         logger.info('Server'){"done compiling"}
       elsif line =~ /stop/
-        exit 0
+        logger.info("")
       end
 
     end
