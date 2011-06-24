@@ -279,7 +279,7 @@ class FCSHDServer
         logger.info('Server'){output}
         logger.info('Server'){"done compiling"}
       elsif line =~ /stop/
-        logger.info("")
+        exit
       end
 
     end
