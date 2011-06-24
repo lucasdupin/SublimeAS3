@@ -8,4 +8,4 @@ class Actionscript3Debug(sublime_plugin.TextCommand):
 	"""
 	def run(self, edit):
 		print os.path.join(sublime.packages_path(), 'ActionScript3', 'bin', 'as3Debugger.app')
-		os.system("open %s" % (os.path.join(sublime.packages_path(), 'ActionScript3', 'bin', 'as3Debugger.app').replace(' ','\ ')))
+		os.system("open %s --args -log YES" % (os.path.join(sublime.packages_path(), 'ActionScript3', 'bin', 'as3Debugger.app').replace(' ','\ ')))
