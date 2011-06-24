@@ -1,7 +1,7 @@
 #Requires
 %w(rubygems rake fileutils yaml logger socket).each { |lib| require lib}
 
-SOCKET_FILE = "/tmp/fcshd60.sock"
+SOCKET_FILE = "/tmp/fcshd.sock"
 
 # Setup tmp path
 TMP_PATH = "/tmp/fcshd/"
