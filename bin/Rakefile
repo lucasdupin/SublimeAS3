@@ -42,7 +42,6 @@ end
 
 desc "Opens default file"
 task :open do
-	
   # get the current 'open' value relative to the Rakefile path
   open = File.join(current_path, config['default'][0]['open'])
   # Checking if there is a  filesystem entry... otherwise, try to open itself
@@ -188,15 +187,18 @@ unless File.exists?(current_path + "/build.yaml")
   exit
 end
 
-def fcshpath
+def fcshdpath
+  fcshdpath = ""
   if !config['sdk-path'].empty?
-    @fcshdpath = config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"
+    fcshdpath = config['sdk-path'].inspect.gsub("[\"", "").gsub("\"]", "")+"/bin/fcsh"
   end
 end
 
-if 'which #{@fcshdpath}'.empty?
+
+
+if 'which #{fcshdpath}'.empty?
     puts "Could not find 'fcsh', is it in your build.yaml?"
-    puts "Your sdk-path is: #{@fcshdpath}"
+    puts "Your sdk-path is: #{fcshdpath}"
     exit
 else
   if 'which fcsh'.empty?
@@ -204,7 +206,7 @@ else
     puts "Your path is: #{ENV['PATH']}"
     exit
   else 
-    @fcshpath = 'fsch'
+    fcshpath = 'fsch'
   end
 end
 
@@ -240,7 +242,9 @@ class FCSHDServer
     # Open it
     logger.info("Server"){ "Opening fcsh"}
     
-    @fcsh = IO.popen(@fcshdpath+"  2>&1", "w+")
+    puts fcshdpath
+
+    @fcsh = IO.popen(fcshdpath+"  2>&1", "w+")
     
     # Read what it has to say
     read_to_prompt(@fcsh)
