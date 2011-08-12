@@ -15,7 +15,7 @@ Make sure the Flex SDK is available in your PATH
 
 Updating
 --------
-`cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/Actionscript \3`  
+`cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/ActionScript3`  
 `git pull`
 
 About
