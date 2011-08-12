@@ -184,7 +184,7 @@ end
 # Making sure the config file exists
 unless File.exists?(current_path + "/build.yaml")
   puts "Could not find buil.yaml at #{current_path + "/build.yaml"}"
-  exit 1
+  exit
 end
 if `/usr/bin/which fcsh`.empty?
   puts "Could not find 'fcsh', is it in your PATH?"
@@ -194,19 +194,13 @@ end
 
 # ####################################################################
 
-
 class FCSHDServer
   ASSIGNED_REGEXP = /^ fcsh: Assigned (\d+) as the compile target id/
   ERROR_REGEXP = /Error: unable to open/
   TARGET_NOT_FOUND_REGEX = /Target (\d+) not found/
 
   def initialize
-    # Look after fcsh
-    if `which fcsh`.empty?
-      logger.error("Server") {"fcsh not found on given path: #{ENV['PATH']}"}
-      exit 1
-    end
-    # When closing...
+     # When closing...
 		trap("EXIT"){
         @socket.close
         @fcsh.close
@@ -214,7 +208,6 @@ class FCSHDServer
     }
     #remembering wich swfs we asked for compiling
 		@commands = Hash.new
-		
   end
 
   def start
