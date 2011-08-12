@@ -28,7 +28,7 @@ Use at your own risk!
 
 TODO
 -----
-Contextual autocomplete
-Sort imports by name
-Create project script
-Dump SWCs in a regular interval
+Contextual autocomplete  
+Sort imports by name  
+Create project script  
+Dump SWCs in a regular interval  
