@@ -30,5 +30,5 @@ TODO
 -----
 Contextual autocomplete
 Sort imports by name
-Script para criar projeto
+Create project script
 Dump SWCs in a regular interval
