@@ -8,12 +8,12 @@
 	$0
 }</string>
 	<key>name</key>
-	<string>for in</string>
+	<string>public function</string>
 	<key>scope</key>
 	<string>source.actionscript.3</string>
 	<key>tabTrigger</key>
 	<string>public</string>
 	<key>uuid</key>
-	<string>10654E1E-C100-4EC1-B067-6CB6C5DD1168</string>
+	<string>08b181ee-f10e-4dc9-bce3-602c20bea05e</string>
 </dict>
 </plist>
