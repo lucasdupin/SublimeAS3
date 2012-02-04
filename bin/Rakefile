@@ -189,7 +189,7 @@ end
 if `/usr/bin/which fcsh`.empty?
   puts "Could not find 'fcsh', is it in your PATH?"
   puts "Your path is: #{ENV['PATH']}"
-  exit 1
+  exit
 end
 
 # ####################################################################
