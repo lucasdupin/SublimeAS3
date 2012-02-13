@@ -5,10 +5,10 @@
 	<key>content</key>
 	<string>public function get ${1:name}():${2:Object}
 {
-	$0
+	return _${1:name};
 }</string>
 	<key>name</key>
-	<string>for in</string>
+	<string>public getter</string>
 	<key>scope</key>
 	<string>source.actionscript.3</string>
 	<key>tabTrigger</key>

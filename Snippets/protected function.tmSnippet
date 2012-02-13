@@ -12,7 +12,7 @@
 	<key>scope</key>
 	<string>source.actionscript.3</string>
 	<key>tabTrigger</key>
-	<string>protected</string>
+	<string>function</string>
 	<key>uuid</key>
 	<string>2db62fc8-1187-44cc-84b5-d8fb0835c603</string>
 </dict>
