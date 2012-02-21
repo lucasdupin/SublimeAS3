@@ -5,8 +5,11 @@
 	<key>content</key>
 	<string>protected function ${1:name}(${2}):${3:void}
 {
-	$0
-}</string>
+	$4
+}
+
+$0
+</string>
 	<key>name</key>
 	<string>protected function</string>
 	<key>scope</key>
