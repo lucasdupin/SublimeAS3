@@ -31,10 +31,8 @@ class Actionscript3Import(sublime_plugin.TextCommand):
 					return
 				# Searching where to add
 				pkg = self.view.find("^\\s*package\\b\\s*([\\w+\\.]*)[\\s\\n]*\\{", 0)
-				# cls = self.view.find("^\\s*(public|final)\\s+(final|public)?\\s*\\b(class|interface|function)\\b", 0)
-				# mta = self.view.find_all("^\\s*\\[(Style|Bindable|Event|Embed|SWF)")
+
 				# Calculate
-				# insert_before = (mta+[cls])[0] # Before class or meta
 				insert_after = sublime.Region(0, 0) if pkg is None else pkg # after the package, if it exists
 
 				l = self.view.line(insert_after.end())
@@ -46,7 +44,7 @@ class Actionscript3Import(sublime_plugin.TextCommand):
 			sublime.status_message("No package found");
 		elif len(matches) == 1:
 			# Found only one, let's insert it
-			imp = matches[0]
+			on_choose_class(0);
 		else:
 			# Lots of choices
 			sublime.active_window().show_quick_panel(matches, on_choose_class);
