@@ -20,7 +20,6 @@ class Actionscript3OrganizeImport(sublime_plugin.TextCommand):
 				class_name += "\("
 				times_used = 1
 			
-
 			times_used += len(self.view.find_all( r'[^\w]%s[^\w]' % class_name ))
 
 			if times_used > 1:
@@ -33,13 +32,13 @@ class Actionscript3OrganizeImport(sublime_plugin.TextCommand):
 		# remove all imports
 		while True:
 			imp = self.view.find("^\\s+import\\s+.*\.(\w+?);", 0)
+
 			if imp == None:
 				break
 			else:
 				self.view.replace(edit, imp, "")
-				insert_reg = imp;
 		
-		pkg = self.view.find("^\\s*package\\b\\s*([\\w+\\.]*)[\\s\\n]*\\{\\s\\s+?", 0)
+		pkg = self.view.find("^\\s*package\\b\\s*([\\w+\\.]*)[\\s\\n]*\\{\\s+?", 0)
 		insert_after = sublime.Region(0, 0) if pkg is None else pkg
 		
 		l = self.view.line( insert_after.end() )
