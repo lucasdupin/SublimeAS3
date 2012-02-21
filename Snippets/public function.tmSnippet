@@ -5,8 +5,11 @@
 	<key>content</key>
 	<string>public function ${1:name}(${2}):${3:void}
 {
-	$0
-}</string>
+	$4
+}
+
+$0
+</string>
 	<key>name</key>
 	<string>public function</string>
 	<key>scope</key>
