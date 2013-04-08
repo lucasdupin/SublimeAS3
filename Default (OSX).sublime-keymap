@@ -1,4 +1,8 @@
 [
+	{ "keys": ["super+shift+o"], "command": "actionscript3_organize_import", "context": [
+		{ "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
+	]
+	},
 	{ "keys": ["super+shift+i"], "command": "actionscript3_import", "context": [
 		{ "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
 	]
@@ -7,17 +11,17 @@
 		{ "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
 	]
 	},
-	{ "keys": ["shift+enter"], "command": "insert_snippet", "args": {"contents": "protected function ${1:name}(${2}):${3:void}\n{\n\t$0\n}"}, "context":
-        [
-                { "key": "setting.auto_indent", "operator": "equal", "operand": true },
-                { "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
-        ]
+	{ "keys": ["super+shift+forward_slash"], "command": "insert_snippet", "args": {"name": "Packages/ActionScript3/Snippets/comment-block.tmSnippet"}, "context":
+    [
+      { "key": "setting.auto_indent", "operator": "equal", "operand": true },
+      { "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
+    ]
 	},
 	{ 
 		"keys": ["super+y"], "command": "show_overlay", "args": {"overlay": "goto", "text": "@"} 
 	},
 	{ 
-		"keys": ["super+r"], "command": "actionscript3_run", "context": [
+		"keys": ["super+enter"], "command": "actionscript3_run", "context": [
 			{ "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
 		]
 	}

@@ -3,14 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>const ${1:name}:${2:Object};</string>
+	<string>/*
+	$0
+*/</string>
 	<key>name</key>
-	<string>const</string>
+	<string>Comment Block</string>
 	<key>scope</key>
 	<string>source.actionscript.3</string>
-	<key>tabTrigger</key>
-	<string>const</string>
 	<key>uuid</key>
-	<string>57384252-DE24-4A47-99B3-D0E7A62941A5</string>
+	<string>d4c7b6ae-d316-4d70-a7c9-b66473c23255</string>
 </dict>
 </plist>
