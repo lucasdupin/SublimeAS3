@@ -5,15 +5,18 @@
 	<key>content</key>
 	<string>protected function ${1:name}(${2}):${3:void}
 {
-	$0
-}</string>
+	$4
+}
+
+$0
+</string>
 	<key>name</key>
-	<string>for in</string>
+	<string>protected function</string>
 	<key>scope</key>
 	<string>source.actionscript.3</string>
 	<key>tabTrigger</key>
-	<string>protected</string>
+	<string>function</string>
 	<key>uuid</key>
-	<string>10654E1E-C100-4EC1-B067-6CB6C5DD1168</string>
+	<string>2db62fc8-1187-44cc-84b5-d8fb0835c603</string>
 </dict>
 </plist>

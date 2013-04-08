@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>content</key>
+  <string>trace("[ ${1:classname}.${2:methodname} ]");</string>
+  <key>name</key>
+  <string>trace function</string>
+  <key>scope</key>
+  <string>source.actionscript.3</string>
+  <key>tabTrigger</key>
+  <string>trace</string>
+  <key>uuid</key>
+  <string>e7a99d66-5622-406b-9844-ed37c4659b3c</string>
+</dict>
+</plist>

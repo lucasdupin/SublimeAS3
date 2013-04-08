@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>content</key>
+  <string>protected const ${1:name}:${2:Object}${3: = ${2/(Object)|(Array)|(Number)|(String)|(int)|(uint)|(XML)|(Boolean)|(.+)/(?1:{)(?2:[)(?3:0.0)(?4:")(?5:0)(?6:0)(?7:&lt;doc)(?8:true)(?9:new $9\()/}$4${2/(Object)|(Array)|(Number)|(String)|(int)|(uint)|(XML)|(Boolean)|(.+)/(?1:})(?2:])(?3:)(?4:")(?5:)(?6:)(?7:\/&gt;)(?8:)(?9:\))/}};</string>
+  <key>name</key>
+  <string>protected const</string>
+  <key>scope</key>
+  <string>source.actionscript.3</string>
+  <key>tabTrigger</key>
+  <string>const</string>
+  <key>uuid</key>
+  <string>19d80da9-bde3-4f04-9fc4-05e29f101eb5</string>
+</dict>
+</plist>

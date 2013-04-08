@@ -3,17 +3,18 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>public function set ${1:name}(${2:name:Object}):void
+	<string>public function set ${1:name}(value:${2:Object}):void
 {
+	_${1:name} = value;
 	$0
 }</string>
 	<key>name</key>
-	<string>for in</string>
+	<string>public setter</string>
 	<key>scope</key>
 	<string>source.actionscript.3</string>
 	<key>tabTrigger</key>
 	<string>set</string>
 	<key>uuid</key>
-	<string>10654E1E-C100-4EC1-B067-6CB6C5DD1168</string>
+	<string>a7f34a7b-af11-47bd-bd67-4f8af67f5708</string>
 </dict>
 </plist>
