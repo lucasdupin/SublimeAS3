@@ -7,7 +7,7 @@
 		{ "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
 	]
 	},
-	{ "keys": ["super+d"], "command": "actionscript3_debug", "context": [
+	{ "keys": ["super+shift+d"], "command": "actionscript3_debug", "context": [
 		{ "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
 	]
 	},
@@ -16,6 +16,12 @@
       { "key": "setting.auto_indent", "operator": "equal", "operand": true },
       { "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
     ]
+	},
+	{ "keys": ["shift+enter"], "command": "insert_snippet", "args": {"contents": "public function ${1:name}(${2}):${3:void}\n{\n\t$0\n}"}, "context":
+        [
+                { "key": "setting.auto_indent", "operator": "equal", "operand": true },
+                { "key": "selector", "operator": "equal", "operand": "source.actionscript.3" }
+        ]
 	},
 	{ 
 		"keys": ["super+y"], "command": "show_overlay", "args": {"overlay": "goto", "text": "@"} 

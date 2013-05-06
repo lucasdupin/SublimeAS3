@@ -1,8 +1,5 @@
 {
-	"cmd": ["rake -f '$packages/ActionScript3/bin/Rakefile'"],
-	"working_dir": "${project_path:${file_path}}",
+	"cmd": ["rake"],
 	"file_regex": "(.*?)\\(([0-9]*)\\): col: ([0-9]*) Error: ",
-	"selector": "source.actionscript.3,source.yaml",
-	"shell": true,
-	"target": "exec_as3"
+	"selector": "source.actionscript.3,source.yaml"
 }

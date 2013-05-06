@@ -1,0 +1,5 @@
+{
+	"cmd": ["rake -f '$packages/ActionScript3/bin/Rakefile'"],
+	"file_regex": "(.*?)\\(([0-9]*)\\): col: ([0-9]*) Error: ",
+	"selector": "source.ruby"
+}
